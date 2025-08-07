@@ -42,12 +42,15 @@ func handlerValidate(w http.ResponseWriter, r *http.Request) {
 
 func getCleanedBody(body string, badWords map[string]struct{}) string {
 	split_msg := strings.Split(body, " ")
+
 	for i, word := range split_msg{
 		lowerWord := strings.ToLower(word)
+
 		if _, ok := badWords[lowerWord]; ok {
     	split_msg[i] = "****"
     }
 	}
+
 	result := strings.Join(split_msg, " ")
 	return result
 }
