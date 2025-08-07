@@ -5,12 +5,15 @@ import (
 	"log"
 	"net/http"
 	"sync/atomic"
+	"database/sql"
+	"github.com/joho/godotenv"
   _	"github.com/lib/pq"
 	"github.com/mcbk51/chirpy/internal/database"
 )
 
 type apiConfig struct {
 	fileserverHits atomic.Int32
+	dbQueries      *database.Queries
 }
 
 func main() {
@@ -18,8 +21,8 @@ func main() {
 	const filepathRoot = "."
 	const port = "8080"
 
-	dbURl := os.Getenv("DB_URL")
-	db, err := sql.Open("postgres", dbURl)
+	dbURL := os.Getenv("DB_URL")
+	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
 	  log.Fatal("Failed to connect database:", err)	
 	}
@@ -29,6 +32,7 @@ func main() {
 	
 	cfg := &apiConfig{
 		fileserverHits: atomic.Int32{},
+		dbQueries:      dbQueries,
 	}
 
 	mux := http.NewServeMux()
