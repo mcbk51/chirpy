@@ -1,9 +1,12 @@
 package main  
 
 import (
+	"os"
 	"log"
 	"net/http"
 	"sync/atomic"
+  _	"github.com/lib/pq"
+	"github.com/mcbk51/chirpy/internal/database"
 )
 
 type apiConfig struct {
@@ -11,8 +14,18 @@ type apiConfig struct {
 }
 
 func main() {
+	godotenv.Load()
 	const filepathRoot = "."
 	const port = "8080"
+
+	dbURl := os.Getenv("DB_URL")
+	db, err := sql.Open("postgres", dbURl)
+	if err != nil {
+	  log.Fatal("Failed to connect database:", err)	
+	}
+	defer db.Close()
+
+	dbQueries := database.New(db)
 	
 	cfg := &apiConfig{
 		fileserverHits: atomic.Int32{},
