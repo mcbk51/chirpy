@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/mcbk51/chirpy/internal/auth"
+	"github.com/mcbk51/chirpy/internal/database"
 )
 
 type User struct {
@@ -41,7 +42,11 @@ func (cfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	user, err := cfg.db.CreateUser(r.Context(), reqBody.Email, hashedPass)
+	user, err := cfg.db.CreateUser(r.Context(), database.CreateUserParams{
+    Email:    reqBody.Email,
+    HashedPassword: hashedPass,
+})
+
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Could not create user", err)
 		return
