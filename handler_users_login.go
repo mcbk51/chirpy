@@ -25,7 +25,7 @@ func (cfg *apiConfig) handlerUserLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := cfg.db.GetUserByEmail(r.Context(), reqBody.Email) // fixed capitalization
+	user, err := cfg.db.GetUserByEmail(r.Context(), reqBody.Email) 
 	if err != nil {
 		respondWithError(w, http.StatusUnauthorized, "Invalid email or password", err)
 		return
