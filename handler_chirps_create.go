@@ -1,9 +1,11 @@
 package main
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strings"
 	"time"
+
 	"github.com/google/uuid"
 	"github.com/mcbk51/chirpy/internal/database"
 )
@@ -52,8 +54,7 @@ func (cfg *apiConfig) handlerCreateChirps(w http.ResponseWriter, r *http.Request
 			CreatedAt: chirp.CreatedAt,
 			UpdatedAt: chirp.UpdatedAt,
 			Body:      chirp.Body, 
-			UserID:    chirp.UserID,
-		},	
+			UserID:    chirp.UserID,	
 	})
 }
 
