@@ -41,7 +41,7 @@ func main() {
 
 	cfg := &apiConfig{
 		fileserverHits: atomic.Int32{},
-		db:      dbQueries,
+		db:             dbQueries,
 		platform:       platform,
 	}
 
