@@ -19,8 +19,8 @@ func (cfg *apiConfig) handlerGetChirpByID (w http.ResponseWriter, r *http.Reques
 		respondWithError(w, http.StatusNotFound, "Could not retrieve chirp", err)
 		return
 	}
-
-respChirp := Chirp{
+  
+	respChirp := Chirp{
 			ID:         chirp.ID,
 			CreatedAt:  chirp.CreatedAt,
 			UpdatedAt:  chirp.UpdatedAt,
