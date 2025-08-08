@@ -21,9 +21,6 @@ func (cfg *apiConfig) handlerCreateChirps(w http.ResponseWriter, r *http.Request
 		Body   string    `json:"body"`
 		UserID uuid.UUID `json:"user_id"`
 	}
-	type returnVals struct {
-		Chirp	
-	}
 	
 	decoder := json.NewDecoder(r.Body)
 	reqBody := requestBody{}
@@ -33,18 +30,14 @@ func (cfg *apiConfig) handlerCreateChirps(w http.ResponseWriter, r *http.Request
 		return
 	}
 	
-	if len(reqBody.Body) > 140 {
-		respondWithError(w, http.StatusBadRequest, "Chirp is too long", nil)
+	
+  
+	cleaned, err := validateChirp(reqBody.Body)
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, err.Error(), err)
 		return
 	}
-	
-	badWords := map[string]struct{}{
-		"kerfuffle": {},
-		"sharbert":  {},
-		"fornax":    {},
-	}
-  
-	cleaned := getCleanedBody(reqBody.Body, badWords)
+
 	chirp, err := cfg.dbQueries.CreateChirp(r.Context(), database.CreateChirpParams{
 		Body:   cleaned,
 		UserID: reqBody.UserID, 
@@ -54,8 +47,7 @@ func (cfg *apiConfig) handlerCreateChirps(w http.ResponseWriter, r *http.Request
 		return
 	}
 	
-	respondWithJSON(w, http.StatusCreated, returnVals{  
-		Chirp: Chirp{
+	respondWithJSON(w, http.StatusCreated, Chirp{
 			ID:        chirp.ID,
 			CreatedAt: chirp.CreatedAt,
 			UpdatedAt: chirp.UpdatedAt,
@@ -63,6 +55,21 @@ func (cfg *apiConfig) handlerCreateChirps(w http.ResponseWriter, r *http.Request
 			UserID:    chirp.UserID,
 		},	
 	})
+}
+
+func validateChirp(body string) (string, error) {
+	const maxChirpLength = 140
+	if len(body) > maxChirpLength {
+		return "", errors.New("Chirp is too long")
+	}
+
+	badWords := map[string]struct{}{
+		"kerfuffle": {},
+		"sharbert":  {},
+		"fornax":    {},
+	}
+	cleaned := getCleanedBody(body, badWords)
+	return cleaned, nil
 }
 
 func getCleanedBody(body string, badWords map[string]struct{}) string {
