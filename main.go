@@ -14,7 +14,7 @@ import (
 
 type apiConfig struct {
 	fileserverHits atomic.Int32
-	dbQueries      *database.Queries
+	db      *database.Queries
 	platform       string
 }
 
@@ -41,7 +41,7 @@ func main() {
 
 	cfg := &apiConfig{
 		fileserverHits: atomic.Int32{},
-		dbQueries:      dbQueries,
+		db:      dbQueries,
 		platform:       platform,
 	}
 

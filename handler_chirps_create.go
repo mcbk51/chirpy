@@ -40,7 +40,7 @@ func (cfg *apiConfig) handlerCreateChirps(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	chirp, err := cfg.dbQueries.CreateChirp(r.Context(), database.CreateChirpParams{
+	chirp, err := cfg.db.CreateChirp(r.Context(), database.CreateChirpParams{
 		Body:   cleaned,
 		UserID: reqBody.UserID, 
 	})
